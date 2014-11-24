@@ -9,6 +9,8 @@ class OQL
         rule(:field)      { match('\w').repeat(1) }
         rule(:operator)   { str('==') | str('!=') | str('~') }
         rule(:value)      { str('"') >> match('\w').repeat.as(:valueString) >> str('"') }
+        
+        rule(:andOp)      { space? >> str('&&') >> space? }
     
         rule(:condition) { field.as(:field) >>
                             space? >>
@@ -19,7 +21,9 @@ class OQL
         
         rule(:filter) { condition.as(:condition) }
         
-        rule(:query) { filter.as(:filter) }
+        rule(:filterList) { filter >> (andOp >> filter).repeat }
+        
+        rule(:query) { filterList.as(:filters) }
         
         root :query
     end
@@ -35,6 +39,7 @@ class OQL
         # TODO: remove escaped "
         rule(valueString: simple(:x)) { x.to_s }
         
+        # transform conditions with a single value
         rule(field: simple(:field),
              operator: simple(:op),
              value: simple(:val)) do
@@ -43,6 +48,20 @@ class OQL
                 field: field.to_s,
                 operator: Transform.parse_operator(op),
                 values: [ val ]
+            }
+        end
+        
+        # enforce that even single filters are put into a sequence
+        rule(filters: subtree(:oneOrMoreFilters)) do
+            
+            if oneOrMoreFilters.kind_of?(Array)
+                result = oneOrMoreFilters 
+            else
+                result = [oneOrMoreFilters]
+            end
+            
+            {
+                filters: result
             }
         end
         

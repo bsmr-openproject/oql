@@ -5,13 +5,15 @@ describe 'OQL' do
         it 'accepts a simple equals' do
             query = 'status == "1"'
             expected = {
-                filter: {
-                    condition: {
-                        field: 'status',
-                        operator: :is_equal,
-                        values: [ '1' ]
+                filters: [
+                    {
+                        condition: {
+                            field: 'status',
+                            operator: :is_equal,
+                            values: [ '1' ]
+                        }
                     }
-                }
+                ]
             }
 
             expect(OQL.parse(query)).to eql expected
@@ -20,13 +22,15 @@ describe 'OQL' do
         it 'accepts a simple not equal' do
             query = 'status != "1"'
             expected = {
-                filter: {
-                    condition: {
-                        field: 'status',
-                        operator: :not_equal,
-                        values: [ '1' ]
+                filters: [
+                    {
+                        condition: {
+                            field: 'status',
+                            operator: :not_equal,
+                            values: [ '1' ]
+                        }
                     }
-                }
+                ]
             }
 
             expect(OQL.parse(query)).to eql expected
@@ -35,13 +39,39 @@ describe 'OQL' do
         it 'accepts a simple contains' do
             query = 'name ~ "foo"'
             expected = {
-                filter: {
-                    condition: {
-                        field: 'name',
-                        operator: :contains,
-                        values: [ 'foo' ]
+                filters: [
+                    {
+                        condition: {
+                            field: 'name',
+                            operator: :contains,
+                            values: [ 'foo' ]
+                        }
                     }
-                }
+                ]
+            }
+
+            expect(OQL.parse(query)).to eql expected
+        end
+        
+        it 'accepts conditions that are AND-concatenated' do
+            query = 'status == "1" && type != "2"'
+            expected = {
+                filters: [
+                    {
+                        condition: {
+                            field: 'status',
+                            operator: :is_equal,
+                            values: [ '1' ]
+                        }
+                    },
+                    {
+                        condition: {
+                            field: 'type',
+                            operator: :not_equal,
+                            values: [ '2' ]
+                        }
+                    }
+                ]
             }
 
             expect(OQL.parse(query)).to eql expected
