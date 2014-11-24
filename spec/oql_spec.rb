@@ -1,8 +1,8 @@
 require 'oql'
 
 describe 'OQL' do
-    describe 'parse' do
-        it 'accepts a simple equals' do
+    describe 'supports the operator' do
+        it 'equals' do
             query = 'status == "1"'
             expected = {
                 filters: [
@@ -19,7 +19,7 @@ describe 'OQL' do
             expect(OQL.parse(query)).to eql expected
         end
         
-        it 'accepts a simple not equal' do
+        it 'not equal' do
             query = 'status != "1"'
             expected = {
                 filters: [
@@ -36,7 +36,7 @@ describe 'OQL' do
             expect(OQL.parse(query)).to eql expected
         end
         
-        it 'accepts a simple contains' do
+        it 'contains' do
             query = 'name ~ "foo"'
             expected = {
                 filters: [
@@ -52,8 +52,10 @@ describe 'OQL' do
 
             expect(OQL.parse(query)).to eql expected
         end
+    end
         
-        it 'accepts conditions that are AND-concatenated' do
+    describe 'supports AND concatenation' do
+        it 'once' do
             query = 'status == "1" && type != "2"'
             expected = {
                 filters: [
@@ -77,14 +79,37 @@ describe 'OQL' do
             expect(OQL.parse(query)).to eql expected
         end
         
-        it 'accepts a fully featured query without any whitespace' do
+        it 'repeatedly' do
+            query = 'status == "1" && type != "2" && status == "1" && type != "2"'
+            result = OQL.parse(query)
+            
+            expect(result[:filters].size).to eql 4
+        end
+    end
+       
+    describe 'handles whitespace' do       
+        it 'when there is none' do
             query = 'status=="1"&&type!="2"'
 
             expect { OQL.parse(query) }.to_not raise_error
         end
         
-        it 'accepts a fully featured query with too many whitespaces' do
+        it 'when there is too much' do
             query = '   status   ==   "1"   &&   type   !=   "2"   '
+
+            expect { OQL.parse(query) }.to_not raise_error
+        end
+        
+        it 'when there are linebreaks' do
+            query = '
+                    status
+                    ==
+                    "1"
+                    &&
+                    type
+                    !=
+                    "2"
+                    '
 
             expect { OQL.parse(query) }.to_not raise_error
         end
