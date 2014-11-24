@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'oql'
 
 describe 'OQL' do
@@ -152,6 +153,28 @@ describe 'OQL' do
                     '
 
             expect { OQL.parse(query) }.to_not raise_error
+        end
+    end
+    
+    describe 'fields' do
+        it 'are accepted when they contain numbers' do            
+            expect{OQL.parse('field12 == "1"')}.to_not raise_error
+        end
+        
+        it 'are accepted when they contain upper and lower case' do            
+            expect{OQL.parse('fieldOne == "1"')}.to_not raise_error
+        end
+        
+        it 'are rejected when they start with a number' do            
+            expect{OQL.parse('1field == "1"')}.to raise_error
+        end
+        
+        it 'are rejected when they contain non ASCII characters' do            
+            expect{OQL.parse('füld == "1"')}.to raise_error
+        end
+        
+        it 'are rejected when they contain underscores' do            
+            expect{OQL.parse('field_one == "1"')}.to raise_error
         end
     end
     

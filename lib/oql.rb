@@ -23,7 +23,7 @@ class OQL
                           }
 
         rule(:andOp)      { space? >> str('&&') >> space? }
-        rule(:field)      { match('\w').repeat(1) }
+        rule(:field)      { match('[A-Za-z]') >> match('[A-Za-z0-9]').repeat }
         rule(:operator)   {
                             space? >>
                             (str('==') |
