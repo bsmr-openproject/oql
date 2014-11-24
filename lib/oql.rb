@@ -8,23 +8,33 @@ class OQL
         rule(:filterList) { filter >> (andOp >> filter).repeat }
         rule(:filter) { condition.as(:condition) }
 
-        rule(:condition) { field.as(:field) >>
-                            space? >>
-                            operator.as(:operator) >>
-                            space? >>
+        rule(:condition)  {
+                            field.as(:field) >>
+                            operator >>
                             (value | valueList).as(:values)
-                         }
+                          }
 
-        rule(:valueList) { str('{') >> space? >>
-                           value >> space? >>
-                           (str(',') >> space? >> value >> space?).repeat >>
-                           str('}')
-                         }
+        rule(:valueList)  {
+                            space? >> str('{') >>
+                            value >>
+                            (str(',') >> value).repeat >>
+                            str('}') >> space?
+                          }
 
         rule(:andOp)      { space? >> str('&&') >> space? }
         rule(:field)      { match('\w').repeat(1) }
-        rule(:operator)   { str('==') | str('!=') | str('~') }
-        rule(:value)      { str('"') >> match('\w').repeat.as(:valueString) >> str('"') }
+        rule(:operator)   {
+                            space? >>
+                            (str('==') |
+                            str('!=') |
+                            str('~')).as(:operator) >>
+                            space?
+                          }
+        rule(:value)      {
+                            space? >> str('"') >>
+                            match('\w').repeat.as(:valueString) >>
+                            str('"') >> space?
+                          }
 
         rule(:space)      { match('\s').repeat(1) }
         rule(:space?)     { space.maybe }

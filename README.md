@@ -7,6 +7,8 @@ Oh Cool! The OpenProject Query Language
 Let's try it EBNF-like:
 
 ````EBNF
+    queryExpr = optionalSpace, filterExpr, optionalSpace
+
     filterExpr = conditionExpr | filterExpr, andOperator, filterExpr | conditionExpr, atOperator, singleValue ;
 
     andOperator = optionalSpace, "&&", optionalSpace ;
