@@ -52,12 +52,12 @@ class OQL
         end
         
         # enforce that even single filters are put into a sequence
-        rule(filters: subtree(:oneOrMoreFilters)) do
+        rule(filters: subtree(:one_or_more_filters)) do
             
-            if oneOrMoreFilters.kind_of?(Array)
-                result = oneOrMoreFilters 
+            result = if one_or_more_filters.kind_of?(Array)
+                one_or_more_filters 
             else
-                result = [oneOrMoreFilters]
+                [one_or_more_filters]
             end
             
             {
@@ -72,7 +72,7 @@ class OQL
 
     def self.parse(query)
         parse_tree = Parser.new.parse(query)
-        
+
         Transform.new.apply(parse_tree)
     end
 end
