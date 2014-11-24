@@ -12,11 +12,17 @@ class OQL
         
         rule(:andOp)      { space? >> str('&&') >> space? }
     
+        rule(:valueList) { str('{') >> space? >>
+                           value >> space? >>
+                           (str(',') >> space? >> value >> space?).repeat >>
+                           str('}')
+                         }
+    
         rule(:condition) { field.as(:field) >>
                             space? >>
                             operator.as(:operator) >>
                             space? >>
-                            value.as(:value)
+                            (value | valueList).as(:values)
                          }
         
         rule(:filter) { condition.as(:condition) }
@@ -42,31 +48,33 @@ class OQL
         # transform conditions with a single value
         rule(field: simple(:field),
              operator: simple(:op),
-             value: simple(:val)) do
+             values: subtree(:val)) do
              
             {
                 field: field.to_s,
                 operator: Transform.parse_operator(op),
-                values: [ val ]
+                values: Transform.enforce_array(val)
             }
         end
         
         # enforce that even single filters are put into a sequence
         rule(filters: subtree(:one_or_more_filters)) do
             
-            result = if one_or_more_filters.kind_of?(Array)
-                one_or_more_filters 
-            else
-                [one_or_more_filters]
-            end
-            
             {
-                filters: result
+                filters: Transform.enforce_array(one_or_more_filters)
             }
         end
         
         def self.parse_operator(operator)
             OPERATORS[operator.to_s]
+        end
+        
+        def self.enforce_array(value_or_array)
+            if value_or_array.kind_of?(Array)
+                value_or_array 
+            else
+                [value_or_array]
+            end
         end
     end
 

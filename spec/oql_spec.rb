@@ -86,16 +86,52 @@ describe 'OQL' do
             expect(result[:filters].size).to eql 4
         end
     end
+    
+    describe 'supports multi-value syntax' do
+        it 'for single values' do
+            query = 'status == { "1" }'
+            expected = {
+                filters: [
+                    {
+                        condition: {
+                            field: 'status',
+                            operator: :is_equal,
+                            values: [ '1' ]
+                        }
+                    }
+                ]
+            }
+
+            expect(OQL.parse(query)).to eql expected
+        end
+        
+        it 'for many values' do
+            query = 'status == { "1", "2", "3" }'
+            expected = {
+                filters: [
+                    {
+                        condition: {
+                            field: 'status',
+                            operator: :is_equal,
+                            values: [ '1', '2', '3' ]
+                        }
+                    }
+                ]
+            }
+
+            expect(OQL.parse(query)).to eql expected
+        end
+    end
        
     describe 'handles whitespace' do       
         it 'when there is none' do
-            query = 'status=="1"&&type!="2"'
+            query = 'status=="1"&&type!={"2","3"}'
 
             expect { OQL.parse(query) }.to_not raise_error
         end
         
         it 'when there is too much' do
-            query = '   status   ==   "1"   &&   type   !=   "2"   '
+            query = '   status   ==   "1"   &&   type   !=   {   "2"   ,   "3"   }   '
 
             expect { OQL.parse(query) }.to_not raise_error
         end
@@ -108,7 +144,11 @@ describe 'OQL' do
                     &&
                     type
                     !=
+                    {
                     "2"
+                    ,
+                    "3"
+                    }
                     '
 
             expect { OQL.parse(query) }.to_not raise_error
