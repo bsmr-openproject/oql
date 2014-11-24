@@ -1,41 +1,109 @@
-OQL
-===
+OpenProject Query Language
+==========================
 
-Oh Cool! The OpenProject Query Language
+The OQL (pronounced *Oh cool!*) is intended to perform filter queries on OpenProject data.
+It is for now part of the *APIv3*, but might propagate further through OpenProject (URLs etc.).
 
+State of implementation: **DRAFT**
 
-Let's try it EBNF-like:
+Note that OQL is currently *work in progress* and on its way being integrated into OpenProject.
+Once integrated it will (hopefully) be subject to growth and extension.
+
+Examples
+========
+
+**Find all tickets with a specific status**
+
+````
+# long format
+status == /api/v3/statuses/2
+
+# short format
+status == 2
+````
+
+**Find tickets that are either of one status or another**
+
+````
+status == { "/api/v3/statuses/1", "/api/v3/statuses/2" }
+````
+
+**Find Bugs about the API**
+
+````
+# Assuming 3 is the ID of your Bug-Type
+subject ~ "API" && type == "/api/v3/types/3"
+````
+
+Query Structure
+===============
+
+The general structure of a OQL query can be described as
+
+````
+field operator value
+````
+
+Where **field** is the name of any property of your ressource, you can consult the [API v3 Specification](https://github.com/opf/openproject/blob/dev/doc/apiv3-documentation.apib)
+for the properties available on each ressource.
+
+The **value** can either be a single value (enclosed in quotation marks) or multiple values, like `{ "value A", "value B" }`.
+In the case of multiple values you can read the filter as **OR** statement, e.g. "If status either equals value A *or* value B" and
+"If the subject either contains foo *or* if it contains bar".
+
+In the case of referenced properties - like the status - you can either specify the Link-URL as provided by the **APIv3** as a value
+or the **ID** of the referenced ressource.
+
+Operators
+=========
+
+As of now the following operators are supported by OQL:
+
+* `==` - **is equal**, true if the specified field is the same as the specified value
+* `!=` - **not equal**, true if the specified field is **not** the same as the specified value
+* `~` - **contains**, true if the specified field is a string and the specified value is a substring of it
+
+Syntax Definition
+=================
+
+The OQL Syntax for the currently available features is defined in EBNF:
 
 ````EBNF
-    queryExpr = optionalSpace, filterExpr, optionalSpace
+queryExpr = optionalSpace, filterExpr, optionalSpace
 
-    filterExpr = conditionExpr | filterExpr, andOperator, filterExpr | conditionExpr, atOperator, singleValue ;
+filterExpr = conditionExpr | filterExpr, andOperator, filterExpr ;
 
-    andOperator = optionalSpace, "&&", optionalSpace ;
-    
-    atOperator = requiredSpace, "at", requiredSpace ;
-    
-    conditionExpr = fieldExpr, binaryOperator, valueExpr | fieldExpr, binaryOperator, fieldExpr;
+andOperator = optionalSpace, "&&", optionalSpace ;
 
-    fieldExpr = alpha, { alphaNum } ;
-    
-    alpha = characters A-Z and a-z
-    
-    alphaNum = alpha | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-    
-    binaryOperator =  optionalSpace, "==", optionalSpace
-                    | optionalSpace, "!=", optionalSpace
-                    | optionalSpace, "~", optionalSpace ;
+conditionExpr = fieldExpr, binaryOperator, valueExpr | fieldExpr, binaryOperator, fieldExpr;
 
-    valueExpr = singleValue | multipleValues ;
-    
-    multipleValues = optionalSpace, "{", singleValue,  { "," singleValue }, "}", optionalSpace ;
-    
-    singleValue = optionalSpace, '"', {(all unicode characters - '"' - '\' | '\"' | '\\')}, '"', optionalSpace ;
-    
-    requiredSpace = whitespace, optionalSpace ;
-    
-    optionalSpace = {whitespace} ;
-    
-    whitespace = all unicode whitespace characters ;
+fieldExpr = alpha, { alphaNum } ;
+
+alpha = characters A-Z and a-z
+
+alphaNum = alpha | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+binaryOperator =  optionalSpace, "==", optionalSpace
+                | optionalSpace, "!=", optionalSpace
+                | optionalSpace, "~", optionalSpace ;
+
+valueExpr = singleValue | multipleValues ;
+
+multipleValues = optionalSpace, "{", singleValue,  { "," singleValue }, "}", optionalSpace ;
+
+singleValue = optionalSpace, '"', {(all unicode characters - '"' - '\' | '\"' | '\\')}, '"', optionalSpace ;
+
+optionalSpace = {whitespace} ;
+
+whitespace = all unicode whitespace characters ;
+````
+
+Syntactic concepts for eventually planned features (*volatile* and *uncertain*):
+
+````EBNF
+filterExpr = conditionExpr | filterExpr, andOperator, filterExpr | conditionExpr, atOperator, singleValue ;
+
+atOperator = requiredSpace, "at", requiredSpace ;
+
+requiredSpace = whitespace, optionalSpace ;
 ````
