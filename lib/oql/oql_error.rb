@@ -1,0 +1,2 @@
+class OQLError < RuntimeError
+end

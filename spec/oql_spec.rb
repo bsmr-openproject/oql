@@ -53,7 +53,7 @@ describe 'OQL' do
             expect(OQL.parse(query)).to eql expected
         end
     end
-        
+    
     describe 'supports AND concatenation' do
         it 'once' do
             query = 'status == "1" && type != "2"'
@@ -153,5 +153,11 @@ describe 'OQL' do
 
             expect { OQL.parse(query) }.to_not raise_error
         end
+    end
+    
+    it 'throws an ParseFailed on invalid input' do
+        query = 'this is not a query!'
+        
+        expect{OQL.parse(query)}.to raise_error(ParsingFailed)
     end
 end

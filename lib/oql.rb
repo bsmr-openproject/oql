@@ -1,3 +1,4 @@
+require 'oql/parsing_failed'
 require 'parslet'
 include Parslet
 
@@ -85,7 +86,11 @@ class OQL
     end
 
     def self.parse(query)
-        parse_tree = Parser.new.parse(query)
+        begin
+            parse_tree = Parser.new.parse(query)
+        rescue Parslet::ParseFailed => e
+            raise ParsingFailed, e.message
+        end
 
         Transform.new.apply(parse_tree)
     end
