@@ -76,5 +76,17 @@ describe 'OQL' do
 
             expect(OQL.parse(query)).to eql expected
         end
+        
+        it 'accepts a fully featured query without any whitespace' do
+            query = 'status=="1"&&type!="2"'
+
+            expect { OQL.parse(query) }.to_not raise_error
+        end
+        
+        it 'accepts a fully featured query with too many whitespaces' do
+            query = '   status   ==   "1"   &&   type   !=   "2"   '
+
+            expect { OQL.parse(query) }.to_not raise_error
+        end
     end
 end

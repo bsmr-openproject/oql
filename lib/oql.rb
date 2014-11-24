@@ -23,7 +23,7 @@ class OQL
         
         rule(:filterList) { filter >> (andOp >> filter).repeat }
         
-        rule(:query) { filterList.as(:filters) }
+        rule(:query) { space? >> filterList.as(:filters) >> space? }
         
         root :query
     end
