@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.name          = "oql"
   spec.version       = OQL::VERSION
   spec.authors       = ["OpenProject Foundation"]
-  spec.email         = ["j.sandbrink@finn.de"]
+  spec.email         = ["info@openproject.org"]
   spec.summary       = %q{The OpenProject Query Language is intended to specify filter queries on OpenProject data.}
   #spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = "https://www.openproject.org/"
