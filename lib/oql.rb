@@ -46,13 +46,15 @@ class OQL
     end
 
     class Transform < Parslet::Transform
+        # parsed operators are represented by unique symbols
+        # this allows abstraction from a specific query representation
         OPERATORS = {
             '==' => :is_equal,
             '!=' => :not_equal,
             '~' => :contains
         }
 
-        # transform values to proper strings
+        # transform values to proper strings (de-escape characters)
         rule(valueString: simple(:x)) {
             x.to_s.sub('\\\\', '\\').sub('\"', '"')
         }
@@ -60,7 +62,7 @@ class OQL
         # edge-case: empty strings are parsed as []
         rule(valueString: []) { '' }
 
-        # transform conditions with a single value
+        # transform conditions (slices -> to_s)
         rule(field: simple(:field),
              operator: simple(:op),
              values: subtree(:val)) do
@@ -72,7 +74,6 @@ class OQL
             }
         end
 
-        # enforce that even single filters are put into a sequence
         rule(filters: subtree(:one_or_more_filters)) do
 
             {
@@ -84,6 +85,9 @@ class OQL
             OPERATORS[operator.to_s]
         end
 
+        # Parslet optimizes repetitions that contain a single element to NOT be Arrays.
+        # This is inconvenient for a caller, as intermediate arrays MIGHT be missing.
+        # Thus we ensure that everywhere where multiple elements are possible an array is guaranteed
         def self.enforce_array(value_or_array)
             if value_or_array.kind_of?(Array)
                 value_or_array
