@@ -26,11 +26,12 @@ class OQL
         rule(:field)      { match('[A-Za-z]') >> match('[A-Za-z0-9]').repeat }
         rule(:operator)   {
                             space? >>
-                            (str('==') |
-                            str('!=') |
-                            str('~')).as(:operator) >>
+                                (str('==') |
+                                str('!=') |
+                                str('~')).as(:operator) >>
                             space?
                           }
+                          
         rule(:value)      {
                             space? >> str('"') >>
                                 # either match a valid escape sequence
