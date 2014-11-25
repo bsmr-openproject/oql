@@ -75,7 +75,7 @@ class OQL
 
         # transform values to proper strings (de-escape characters)
         rule(valueString: simple(:x)) {
-            x.to_s.sub('\\\\', '\\').sub('\"', '"')
+            x.to_s.gsub('\\\\', '\\').gsub('\"', '"')
         }
 
         # edge-case: empty strings are parsed as []
