@@ -33,7 +33,7 @@ class OQL
                           }
         rule(:value)      {
                             space? >> str('"') >>
-                            match('\w').repeat.as(:valueString) >>
+                            match('[^"]').repeat.as(:valueString) >>
                             str('"') >> space?
                           }
 

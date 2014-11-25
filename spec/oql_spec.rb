@@ -178,6 +178,24 @@ describe 'OQL' do
         end
     end
     
+    describe 'values' do
+        it 'can contain link-ish content' do            
+            expect{OQL.parse('status == "/api/v3/statuses/2"')}.to_not raise_error
+        end
+        
+        it 'can contain whitespace and punctuation' do            
+            expect{OQL.parse('field == "This is a sentence, with comma."')}.to_not raise_error
+        end
+        
+        it 'can contain umlaute' do            
+            expect{OQL.parse('field == "Straßenhäuser"')}.to_not raise_error
+        end
+        
+        it 'cannot contain an " alone' do            
+            expect{OQL.parse('field == "Foo"Bar"')}.to raise_error
+        end
+    end
+    
     it 'throws an ParseFailed on invalid input' do
         query = 'this is not a query!'
         
