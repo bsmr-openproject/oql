@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'oql/oql_error'
-
-class ParsingFailed < OQLError
+class OQL
+  VERSION = "0.1.0"
 end

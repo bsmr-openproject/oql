@@ -1,13 +1,30 @@
 OpenProject Query Language
 ==========================
 
-The OQL (pronounced *Oh cool!*) is intended to perform filter queries on OpenProject data.
+The OQL (pronounced *Oh cool!*) is intended to specify filter queries on OpenProject data.
 It is for now part of the *APIv3*, but might propagate further through OpenProject (URLs etc.).
 
 State of implementation: **DRAFT**
 
 Note that OQL is currently *work in progress* and on its way being integrated into OpenProject.
 Once integrated it will (hopefully) be subject to growth and extension.
+
+Installation
+============
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'oql'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install oql
 
 Examples
 ========
