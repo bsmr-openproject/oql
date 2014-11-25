@@ -33,7 +33,10 @@ class OQL
                           }
         rule(:value)      {
                             space? >> str('"') >>
-                            match('[^"]').repeat.as(:valueString) >>
+                                # either match a valid escape sequence
+                                (str('\\') >> (str('"') | str('\\')) |
+                                # or match any character, but " and \
+                                str('"').absent? >> str('\\').absent? >> any).repeat.as(:valueString) >>
                             str('"') >> space?
                           }
 
@@ -49,8 +52,9 @@ class OQL
         }
 
         # transform values to proper strings
-        # TODO: remove escaped "
-        rule(valueString: simple(:x)) { x.to_s }
+        rule(valueString: simple(:x)) {
+            x.to_s.sub('\\\\', '\\').sub('\"', '"')
+        }
         
         # edge-case: empty strings are parsed as []
         rule(valueString: []) { '' }

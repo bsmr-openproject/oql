@@ -196,9 +196,25 @@ describe 'OQL' do
             
             expect(result[:filters].first[:condition][:values].first).to eql ''
         end
-        
-        it 'cannot contain an " alone' do            
+
+        it 'can contain and parse an escaped "' do
+            result = OQL.parse('field == "Foo\"Bar"')
+
+            expect(result[:filters].first[:condition][:values].first).to eql 'Foo"Bar'
+        end
+
+        it 'can contain and parse an escaped backslash' do
+            result = OQL.parse('field == "Foo\\\\Bar"')
+
+            expect(result[:filters].first[:condition][:values].first).to eql 'Foo\Bar'
+        end
+
+        it 'cannot contain an " alone' do
             expect{OQL.parse('field == "Foo"Bar"')}.to raise_error
+        end
+
+        it 'cannot escape anything but " and backslash' do
+            expect{OQL.parse('field == "Fu\n"')}.to raise_error
         end
     end
     
