@@ -31,7 +31,7 @@ class OQL
                                 str('~')).as(:operator) >>
                             space?
                           }
-                          
+
         rule(:value)      {
                             space? >> str('"') >>
                                 # either match a valid escape sequence
@@ -56,7 +56,7 @@ class OQL
         rule(valueString: simple(:x)) {
             x.to_s.sub('\\\\', '\\').sub('\"', '"')
         }
-        
+
         # edge-case: empty strings are parsed as []
         rule(valueString: []) { '' }
 
