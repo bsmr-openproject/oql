@@ -66,7 +66,12 @@ As of now the following operators are supported by OQL:
 Syntax Definition
 =================
 
-The OQL Syntax for the currently available features is defined in EBNF:
+The OQL Syntax for the currently available features is defined in EBNF.
+
+Note that for readability purposes the following POSIX character classes are used inside the EBNF:
+
+* `[:print:]` - all printable characters, including whitespace
+* `[:space:]` - whitespace (horizontal and vertical)
 
 ````EBNF
 queryExpr = optionalSpace, filterExpr, optionalSpace
@@ -79,9 +84,14 @@ conditionExpr = fieldExpr, binaryOperator, valueExpr | fieldExpr, binaryOperator
 
 fieldExpr = alpha, { alphaNum } ;
 
-alpha = characters A-Z and a-z
+alpha = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" |
+        "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" |
+        "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" |
+        "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
 
-alphaNum = alpha | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+alphaNum = alpha | digit ;
 
 binaryOperator =  optionalSpace, "==", optionalSpace
                 | optionalSpace, "!=", optionalSpace
@@ -91,11 +101,11 @@ valueExpr = singleValue | multipleValues ;
 
 multipleValues = optionalSpace, "{", singleValue,  { "," singleValue }, "}", optionalSpace ;
 
-singleValue = optionalSpace, '"', {(all unicode characters - '"' - '\' | '\"' | '\\')}, '"', optionalSpace ;
+singleValue = optionalSpace, '"', {([:print:] - '"' - '\' | '\"' | '\\')}, '"', optionalSpace ;
 
 optionalSpace = {whitespace} ;
 
-whitespace = all unicode whitespace characters ;
+whitespace = [:space:] ;
 ````
 
 Syntactic concepts for eventually planned features (*volatile* and *uncertain*):
