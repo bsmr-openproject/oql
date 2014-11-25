@@ -191,6 +191,12 @@ describe 'OQL' do
             expect{OQL.parse('field == "Straßenhäuser"')}.to_not raise_error
         end
         
+        it 'can be empty' do            
+            result = OQL.parse('field == ""')
+            
+            expect(result[:filters].first[:condition][:values].first).to eql ''
+        end
+        
         it 'cannot contain an " alone' do            
             expect{OQL.parse('field == "Foo"Bar"')}.to raise_error
         end

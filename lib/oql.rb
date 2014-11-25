@@ -51,6 +51,9 @@ class OQL
         # transform values to proper strings
         # TODO: remove escaped "
         rule(valueString: simple(:x)) { x.to_s }
+        
+        # edge-case: empty strings are parsed as []
+        rule(valueString: []) { '' }
 
         # transform conditions with a single value
         rule(field: simple(:field),
