@@ -104,9 +104,40 @@ describe 'OQL' do
     end
   end
 
-  # --------------------------------------------------------
-  # integrative tests to keep (TODO: remove this line once tests above have been replaced by unit tests)
-  # --------------------------------------------------------
+  it 'handles missing whitespace' do
+    query = 'status=="1"&&type!={"2","3"}'
+
+    expect { OQL.parse(query) }.to_not raise_error
+  end
+
+  it 'handles extra whitespace' do
+    query = '   status   ==   "1"   &&   type   !=   {   "2"   ,   "3"   }   '
+
+    expect { OQL.parse(query) }.to_not raise_error
+  end
+
+  it 'handles linebreaks' do
+    query = '
+            status
+            ==
+            "1"
+            &&
+            type
+            !=
+            {
+            "2"
+            ,
+            "3"
+            }
+            '
+
+    expect { OQL.parse(query) }.to_not raise_error
+  end
+
+  # ---------------------------------------------------------------------------
+  # integrative tests to keep are below
+  # integrative tests above can be deleted as soon as all their aspects are covered by unit tests
+  # ---------------------------------------------------------------------------
 
   it 'returns a valid tree for a simple query'do
     query = 'status == "1"'
@@ -153,35 +184,5 @@ describe 'OQL' do
     query = 'this is not a query!'
 
     expect{OQL.parse(query)}.to raise_error(ParsingFailed)
-  end
-
-  it 'handles missing whitespace' do
-    query = 'status=="1"&&type!={"2","3"}'
-
-    expect { OQL.parse(query) }.to_not raise_error
-  end
-
-  it 'handles extra whitespace' do
-    query = '   status   ==   "1"   &&   type   !=   {   "2"   ,   "3"   }   '
-
-    expect { OQL.parse(query) }.to_not raise_error
-  end
-
-  it 'handles linebreaks' do
-    query = '
-            status
-            ==
-            "1"
-            &&
-            type
-            !=
-            {
-            "2"
-            ,
-            "3"
-            }
-            '
-
-    expect { OQL.parse(query) }.to_not raise_error
   end
 end
