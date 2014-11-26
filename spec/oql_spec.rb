@@ -230,11 +230,11 @@ describe 'OQL' do
 
             expect(result[:filters].first[:condition][:values].first).to eql 'To print a " you have to write \".'
         end
-        
+
         it 'cannot contain an " alone' do
             expect{OQL.parse('field == "Foo"Bar"')}.to raise_error
         end
-        
+
         it 'cannot contain an " after an escaped backslash' do
             expect{OQL.parse('field == "Foo\\\\"Bar"')}.to raise_error
         end
