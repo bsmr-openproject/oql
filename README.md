@@ -6,7 +6,7 @@ It is for now part of the *APIv3*, but might propagate further through OpenProje
 
 State of implementation: **DRAFT**
 
-Note that OQL is currently *work in progress* and on its way being integrated into OpenProject.
+Note that OQL is currently *work in progress* and on its way of being integrated into OpenProject.
 Once integrated it will (hopefully) be subject to growth and extension.
 
 Installation
