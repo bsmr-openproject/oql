@@ -104,149 +104,84 @@ describe 'OQL' do
     end
   end
 
-  describe 'supports multi-value syntax' do
-    it 'for single values' do
-      query = 'status == { "1" }'
-      expected = {
-        filters: [
-          {
-            condition: {
-              field: 'status',
-              operator: :is_equal,
-              values: [ '1' ]
-            }
+  # --------------------------------------------------------
+  # integrative tests to keep (TODO: remove this line once tests above have been replaced by unit tests)
+  # --------------------------------------------------------
+
+  it 'returns a valid tree for a simple query'do
+    query = 'status == "1"'
+    expected = {
+      filters: [
+        {
+          condition: {
+            field: 'status',
+            operator: :is_equal,
+            values: [ '1' ]
           }
-        ]
-      }
+        }
+      ]
+    }
 
-      expect(OQL.parse(query)).to eql expected
-    end
+    expect(OQL.parse(query)).to eql expected
+  end
 
-    it 'for many values' do
-      query = 'status == { "1", "2", "3" }'
-      expected = {
-        filters: [
-          {
-            condition: {
-              field: 'status',
-              operator: :is_equal,
-              values: [ '1', '2', '3' ]
-            }
+  it 'returns a valid tree for multiple filters and values' do
+    query = 'status == "1" && type != { "1", "2" }'
+    expected = {
+      filters: [
+        {
+          condition: {
+            field: 'status',
+            operator: :is_equal,
+            values: [ '1' ]
           }
-        ]
-      }
+        },
+        {
+          condition: {
+            field: 'type',
+            operator: :not_equal,
+            values: [ '1', '2' ]
+          }
+        }
+      ]
+    }
 
-      expect(OQL.parse(query)).to eql expected
-    end
+    expect(OQL.parse(query)).to eql expected
   end
 
-  describe 'handles whitespace' do
-    it 'when there is none' do
-      query = 'status=="1"&&type!={"2","3"}'
-
-      expect { OQL.parse(query) }.to_not raise_error
-    end
-
-    it 'when there is too much' do
-      query = '   status   ==   "1"   &&   type   !=   {   "2"   ,   "3"   }   '
-
-      expect { OQL.parse(query) }.to_not raise_error
-    end
-
-    it 'when there are linebreaks' do
-      query = '
-              status
-              ==
-              "1"
-              &&
-              type
-              !=
-              {
-              "2"
-              ,
-              "3"
-              }
-              '
-
-      expect { OQL.parse(query) }.to_not raise_error
-    end
-  end
-
-  describe 'fields' do
-    it 'are accepted when they contain numbers' do
-      expect{OQL.parse('field12 == "1"')}.to_not raise_error
-    end
-
-    it 'are accepted when they contain upper and lower case' do
-      expect{OQL.parse('fieldOne == "1"')}.to_not raise_error
-    end
-
-    it 'are rejected when they start with a number' do
-      expect{OQL.parse('1field == "1"')}.to raise_error
-    end
-
-    it 'are rejected when they contain non ASCII characters' do
-      expect{OQL.parse('füld == "1"')}.to raise_error
-    end
-
-    it 'are rejected when they contain underscores' do
-      expect{OQL.parse('field_one == "1"')}.to raise_error
-    end
-  end
-
-  describe 'values' do
-    it 'can contain link-ish content' do
-      expect{OQL.parse('status == "/api/v3/statuses/2"')}.to_not raise_error
-    end
-
-    it 'can contain whitespace and punctuation' do
-      expect{OQL.parse('field == "This is a sentence, with comma."')}.to_not raise_error
-    end
-
-    it 'can contain umlaute' do
-      expect{OQL.parse('field == "Straßenhäuser"')}.to_not raise_error
-    end
-
-    it 'can be empty' do
-      result = OQL.parse('field == ""')
-
-      expect(result[:filters].first[:condition][:values].first).to eql ''
-    end
-
-    it 'can contain and parse an escaped "' do
-      result = OQL.parse('field == "Foo\"Bar\""')
-
-      expect(result[:filters].first[:condition][:values].first).to eql 'Foo"Bar"'
-    end
-
-    it 'can contain and parse an escaped backslash' do
-      result = OQL.parse('field == "Foo\\\\Bar\\\\s"')
-
-      expect(result[:filters].first[:condition][:values].first).to eql 'Foo\Bar\s'
-    end
-
-    it 'can contain and parse an escaped " escape sequence' do
-      result = OQL.parse('field == "To print a \" you have to write \\\\\\"."')
-
-      expect(result[:filters].first[:condition][:values].first).to eql 'To print a " you have to write \".'
-    end
-
-    it 'cannot contain an " alone' do
-      expect{OQL.parse('field == "Foo"Bar"')}.to raise_error
-    end
-
-    it 'cannot contain an " after an escaped backslash' do
-      expect{OQL.parse('field == "Foo\\\\"Bar"')}.to raise_error
-    end
-
-    it 'cannot escape anything but " and backslash' do
-      expect{OQL.parse('field == "Fu\n"')}.to raise_error
-    end
-  end
-
-  it 'throws an ParseFailed on invalid input' do
+  it 'throws a ParsingFailed error on invalid input' do
     query = 'this is not a query!'
 
     expect{OQL.parse(query)}.to raise_error(ParsingFailed)
+  end
+
+  it 'handles missing whitespace' do
+    query = 'status=="1"&&type!={"2","3"}'
+
+    expect { OQL.parse(query) }.to_not raise_error
+  end
+
+  it 'handles extra whitespace' do
+    query = '   status   ==   "1"   &&   type   !=   {   "2"   ,   "3"   }   '
+
+    expect { OQL.parse(query) }.to_not raise_error
+  end
+
+  it 'handles linebreaks' do
+    query = '
+            status
+            ==
+            "1"
+            &&
+            type
+            !=
+            {
+            "2"
+            ,
+            "3"
+            }
+            '
+
+    expect { OQL.parse(query) }.to_not raise_error
   end
 end
