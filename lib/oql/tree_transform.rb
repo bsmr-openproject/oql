@@ -15,17 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'oql/operators'
 require 'parslet'
 
 class TreeTransform < Parslet::Transform
-  # parsed operators are represented by unique symbols
-  # this allows abstraction from a specific query representation
-  OPERATORS = {
-    '==' => :is_equal,
-    '!=' => :not_equal,
-    '~' => :contains
-  }
-
   # transform values to proper strings (de-escape characters)
   rule(valueString: simple(:x)) {
     x.to_s.gsub('\\\\', '\\').gsub('\"', '"')
@@ -54,7 +47,7 @@ class TreeTransform < Parslet::Transform
   end
 
   def self.parse_operator(operator)
-    OPERATORS[operator.to_s]
+    Operators::CONDITION_OPERATORS[operator.to_s]
   end
 
   # Parslet optimizes repetitions that contain a single element to NOT be Arrays.

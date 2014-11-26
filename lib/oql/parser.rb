@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'oql/operators'
 require 'parslet'
 
 class Parser < Parslet::Parser
@@ -41,9 +42,7 @@ class Parser < Parslet::Parser
   rule(:field)      { match('[A-Za-z]') >> match('[A-Za-z0-9]').repeat }
   rule(:operator)   {
                       spaced(
-                        (str('==') |
-                        str('!=') |
-                        str('~')).as(:operator)
+                        operators.as(:operator)
                       )
                     }
 
@@ -63,5 +62,9 @@ class Parser < Parslet::Parser
 
   def spaced(expression)
     space? >> expression >> space?
+  end
+
+  def operators()
+    Operators::CONDITION_OPERATORS.map { |op,_| str(op) }.reduce(:|)
   end
 end
