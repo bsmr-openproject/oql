@@ -19,7 +19,7 @@ require 'parslet'
 
 class Parser < Parslet::Parser
   root :query
-  rule(:query)      { space? >> filterList.as(:filters) >> space? }
+  rule(:query)      { spaced( filterList.as(:filters) ) }
   rule(:filterList) { filter >> (andOp >> filter).repeat }
   rule(:filter)     { condition.as(:condition) }
 
@@ -30,31 +30,38 @@ class Parser < Parslet::Parser
                     }
 
   rule(:valueList)  {
-                      space? >> str('{') >>
-                      value >>
-                      (str(',') >> value).repeat >>
-                      str('}') >> space?
+                      spaced(
+                        str('{') >>
+                        value >> (str(',') >> value).repeat >>
+                        str('}')
+                      )
                     }
 
-  rule(:andOp)      { space? >> str('&&') >> space? }
+  rule(:andOp)      { spaced( str('&&') ) }
   rule(:field)      { match('[A-Za-z]') >> match('[A-Za-z0-9]').repeat }
   rule(:operator)   {
-                      space? >>
+                      spaced(
                         (str('==') |
                         str('!=') |
-                        str('~')).as(:operator) >>
-                      space?
+                        str('~')).as(:operator)
+                      )
                     }
 
   rule(:value)      {
-                      space? >> str('"') >>
-                        # either match a valid escape sequence
-                        (str('\\') >> (str('"') | str('\\')) |
-                        # or match any character, but " and \
-                        str('"').absent? >> str('\\').absent? >> any).repeat.as(:valueString) >>
-                      str('"') >> space?
+                      spaced(
+                        str('"') >>
+                          # either match a valid escape sequence
+                          (str('\\') >> (str('"') | str('\\')) |
+                          # or match any character, but " and \
+                          str('"').absent? >> str('\\').absent? >> any).repeat.as(:valueString) >>
+                        str('"')
+                      )
                     }
 
   rule(:space)      { match('\s').repeat(1) }
   rule(:space?)     { space.maybe }
+
+  def spaced(expression)
+    space? >> expression >> space?
+  end
 end
