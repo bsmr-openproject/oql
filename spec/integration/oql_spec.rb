@@ -18,59 +18,6 @@
 require 'oql'
 
 describe 'OQL' do
-  describe 'supports the operator' do
-    it 'equals' do
-      query = 'status == "1"'
-      expected = {
-        filters: [
-          {
-            condition: {
-              field: 'status',
-              operator: :is_equal,
-              values: [ '1' ]
-            }
-          }
-        ]
-      }
-
-      expect(OQL.parse(query)).to eql expected
-    end
-
-    it 'not equal' do
-      query = 'status != "1"'
-      expected = {
-        filters: [
-          {
-            condition: {
-              field: 'status',
-              operator: :not_equal,
-              values: [ '1' ]
-            }
-          }
-        ]
-      }
-
-      expect(OQL.parse(query)).to eql expected
-    end
-
-    it 'contains' do
-      query = 'name ~ "foo"'
-      expected = {
-        filters: [
-          {
-            condition: {
-              field: 'name',
-              operator: :contains,
-              values: [ 'foo' ]
-            }
-          }
-        ]
-      }
-
-      expect(OQL.parse(query)).to eql expected
-    end
-  end
-
   describe 'supports AND concatenation' do
     it 'once' do
       query = 'status == "1" && type != "2"'

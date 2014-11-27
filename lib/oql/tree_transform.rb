@@ -34,7 +34,7 @@ class TreeTransform < Parslet::Transform
 
     {
       field: field.to_s,
-      operator: TreeTransform.parse_operator(op),
+      operator: TreeTransform.parse_operator(op.to_s),
       values: TreeTransform.enforce_array(val)
     }
   end
@@ -47,7 +47,7 @@ class TreeTransform < Parslet::Transform
   end
 
   def self.parse_operator(operator)
-    Operators::CONDITION_OPERATORS[operator.to_s]
+    Operators::CONDITION_OPERATORS[operator]
   end
 
   # Parslet optimizes repetitions that contain a single element to NOT be Arrays.

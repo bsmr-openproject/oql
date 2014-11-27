@@ -19,32 +19,20 @@ require 'oql/tree_transform'
 require 'parslet/rig/rspec'
 
 describe 'TreeTransform' do
-  let(:transform) { TreeTransform.new }
-
-  describe 'valueString rules' do
-    it 'transforms empty strings' do
-      tree = { valueString: [] }
-      expect(transform.apply(tree)).to eql ''
+  describe 'enforce_array method' do
+    it 'does not wrap an array' do
+      input = ['a', 'b']
+      expect(TreeTransform.enforce_array(input)).to eql ['a', 'b']
     end
 
-    it 'transforms non-empty strings' do
-      tree = { valueString: 'foobar!' }
-      expect(transform.apply(tree)).to eql 'foobar!'
+    it 'does wrap a string' do
+      input = 'a'
+      expect(TreeTransform.enforce_array(input)).to eql ['a']
     end
 
-    it 'transforms an escaped quote' do
-      tree = { valueString: 'Foo\"Bar\"' }
-      expect(transform.apply(tree)).to eql 'Foo"Bar"'
-    end
-
-    it 'transforms an escaped backslash' do
-      tree = { valueString: 'Foo\\\\Bar\\\\s' }
-      expect(transform.apply(tree)).to eql 'Foo\Bar\s'
-    end
-
-    it 'transforms an escaped quote escape sequence' do
-      tree = { valueString: 'To print a \" you have to write \\\\\\".' }
-      expect(transform.apply(tree)).to eql 'To print a " you have to write \".'
+    it 'does wrap a hash' do
+      input = { foo: 'bar' }
+      expect(TreeTransform.enforce_array(input)).to eql [ { foo: 'bar' } ]
     end
   end
 end
