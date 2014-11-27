@@ -26,7 +26,7 @@ describe 'OQL' do
           condition: {
             field: 'status',
             operator: :is_equal,
-            values: [ '1' ]
+            values: ['1']
           }
         }
       ]
@@ -43,14 +43,14 @@ describe 'OQL' do
           condition: {
             field: 'status',
             operator: :is_equal,
-            values: [ '1' ]
+            values: ['1']
           }
         },
         {
           condition: {
             field: 'type',
             operator: :not_equal,
-            values: [ '1', '2' ]
+            values: ['1', '2']
           }
         }
       ]
@@ -62,6 +62,6 @@ describe 'OQL' do
   it 'throws a ParsingFailed error on invalid input' do
     query = 'this is not a query!'
 
-    expect{OQL.parse(query)}.to raise_error(ParsingFailed)
+    expect { OQL.parse(query) }.to raise_error(ParsingFailed)
   end
 end

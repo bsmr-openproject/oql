@@ -25,12 +25,12 @@ describe 'TreeTransform' do
   describe 'filters rule' do
     it 'wraps single filters' do
       tree = { filters: { foo: 'bar' } }
-      expect(transform.apply(tree)[:filters]).to eql [ { foo: 'bar' } ]
+      expect(transform.apply(tree)[:filters]).to eql [{ foo: 'bar' }]
     end
 
     it 'keeps multiple filters unchanged' do
-      tree = { filters: [ { foo: 'bar' }, { foo: 'bar' } ] }
-      expect(transform.apply(tree)[:filters]).to eql [ { foo: 'bar' }, { foo: 'bar' } ]
+      tree = { filters: [{ foo: 'bar' }, { foo: 'bar' }] }
+      expect(transform.apply(tree)[:filters]).to eql [{ foo: 'bar' }, { foo: 'bar' }]
     end
   end
 end

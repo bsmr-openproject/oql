@@ -32,7 +32,7 @@ describe 'TreeTransform' do
 
     it 'does wrap a hash' do
       input = { foo: 'bar' }
-      expect(TreeTransform.enforce_array(input)).to eql [ { foo: 'bar' } ]
+      expect(TreeTransform.enforce_array(input)).to eql [{ foo: 'bar' }]
     end
   end
 end

@@ -54,7 +54,7 @@ class TreeTransform < Parslet::Transform
   # This is inconvenient for a caller, as intermediate arrays MIGHT be missing.
   # Thus we ensure that everywhere where multiple elements are possible an array is guaranteed
   def self.enforce_array(value_or_array)
-    if value_or_array.kind_of?(Array)
+    if value_or_array.is_a?(Array)
       value_or_array
     else
       [value_or_array]

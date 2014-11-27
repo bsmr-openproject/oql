@@ -16,5 +16,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class OQL
-  VERSION = "0.1.0"
+  VERSION = '0.1.0'
 end

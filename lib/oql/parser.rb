@@ -20,7 +20,7 @@ require 'parslet'
 
 class Parser < Parslet::Parser
   root :query
-  rule(:query)      { spaced( filterList.as(:filters) ) }
+  rule(:query)      { spaced(filterList.as(:filters)) }
   rule(:filterList) { filter >> (andOp >> filter).repeat }
   rule(:filter)     { condition.as(:condition) }
 
@@ -38,7 +38,7 @@ class Parser < Parslet::Parser
                       )
                     }
 
-  rule(:andOp)      { spaced( str('&&') ) }
+  rule(:andOp)      { spaced(str('&&')) }
   rule(:field)      { match('[A-Za-z]') >> match('[A-Za-z0-9]').repeat }
   rule(:operator)   {
                       spaced(
@@ -64,7 +64,7 @@ class Parser < Parslet::Parser
     space? >> expression >> space?
   end
 
-  def operators()
-    Operators::CONDITION_OPERATORS.map { |op,_| str(op) }.reduce(:|)
+  def operators
+    Operators::CONDITION_OPERATORS.map { |op, _| str(op) }.reduce(:|)
   end
 end
