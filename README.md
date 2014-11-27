@@ -17,16 +17,12 @@ Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'oql'
+gem 'oql', :git => 'https://github.com/opf/oql.git', :branch => 'dev'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install oql
 
 Examples
 ========
