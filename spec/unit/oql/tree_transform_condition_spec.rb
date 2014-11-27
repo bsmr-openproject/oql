@@ -25,7 +25,7 @@ describe 'TreeTransform' do
   let(:operator) { double('operator', to_s: 'bar') }
   let(:values) { double('values', to_s: 'baz') }
 
-  describe 'condition rules' do
+  describe 'condition rule' do
     it 'transforms into the same structure' do
       tree = { field: field, operator: operator, values: values }
       result = transform.apply(tree)
