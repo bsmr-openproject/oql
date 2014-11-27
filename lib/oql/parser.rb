@@ -19,6 +19,9 @@ require 'oql/operators'
 require 'parslet'
 
 class Parser < Parslet::Parser
+  # rubocop:disable Style/MultilineOperationIndentation
+  # rubocop:disable Lint/BlockAlignment
+
   root :query
   rule(:query)      { spaced(filterList.as(:filters)) }
   rule(:filterList) { filter >> (andOp >> filter).repeat }
@@ -59,6 +62,9 @@ class Parser < Parslet::Parser
 
   rule(:space)      { match('\s').repeat(1) }
   rule(:space?)     { space.maybe }
+
+  # rubocop:enable Lint/BlockAlignment
+  # rubocop:enable Style/MultilineOperationIndentation
 
   def spaced(expression)
     space? >> expression >> space?

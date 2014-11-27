@@ -1,7 +1,6 @@
 AllCops:
   Exclude:
-    - db/schema.rb
-    - lib/plugins/rfpdf/**/*
+    - oql.gemspec
 
 AccessorMethodName:
   Enabled: false
