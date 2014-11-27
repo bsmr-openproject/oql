@@ -1,6 +1,8 @@
 OpenProject Query Language
 ==========================
 
+[![Build Status](https://travis-ci.org/opf/oql.svg)](https://travis-ci.org/opf/oql)
+
 The OQL (pronounced *Oh cool!*) is intended to specify filter queries on OpenProject data.
 It is for now part of the *APIv3*, but might propagate further through OpenProject (URLs etc.).
 
