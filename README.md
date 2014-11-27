@@ -79,8 +79,10 @@ Operators
 As of now the following operators are supported by OQL:
 
 * `==` - **is equal**, true if the specified field is the same as the specified value
+    * *Note: if the specified value is a string, it is matched case insensitive*
 * `!=` - **not equal**, true if the specified field is **not** the same as the specified value
-* `~` - **contains**, true if the specified field is a string and the specified value is a substring of it
+    * *Note: if the specified value is a string, it is matched case insensitive*
+* `~` - **contains**, true if the specified field is a string that contains the specified value (case insensitive matching)
 
 Syntax Definition
 =================
