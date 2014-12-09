@@ -23,6 +23,13 @@ require 'oql/version'
 require 'parslet'
 
 class OQL
+
+  # Parses the given query string and returns a tree-ish representation of
+  # the given query.
+  #
+  # @param query [String] The query string to be parsed
+  # @return [Hash] A tree-ish representation of the parsed query
+  # @raise [OQL::ParsingFailed] if the query provided was invalid
   def self.parse(query)
     begin
       parse_tree = Parser.new.parse(query)

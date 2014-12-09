@@ -16,5 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class OQL
+  # The version number of the OQL gem
   VERSION = '0.1.0'
 end
