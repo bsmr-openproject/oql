@@ -31,10 +31,10 @@ Examples
 
 ````
 # long format
-status == /api/v3/statuses/2
+status == "/api/v3/statuses/2"
 
 # short format
-status == 2
+status == "2"
 ````
 
 **Find tickets that are either of one status or another**
