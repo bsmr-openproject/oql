@@ -15,30 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'oql/parser'
-require 'oql/parsing_failed'
-require 'oql/tree_transform'
-require 'oql/value_list_transform'
-require 'oql/version'
-
+require 'oql/operators'
 require 'parslet'
 
-class OQL
+# This transform will take a tree containing :valueList nodes and
+# for each of those nodes either emit an empty array (for empty lists)
+# or the child nodes of the :valueNode
+# A separate transform is neccessary for two reasons:
+#  1. Empty :valueLists need to be emitted as empty arrays
+#  2. This transform has to run before :valueString rules were executed,
+#     because otherwise it would not be possible to distinguish between
+#     empty :valueLists and single-value :valueLists that have tranformed :valueStrings
+#    (because both contain "simple" child nodes
+class ValueListTransform < Parslet::Transform
+  rule(valueList: simple(:x)) { [] }
 
-  # Parses the given query string and returns a tree-ish representation of
-  # the given query.
-  #
-  # @param query [String] The query string to be parsed
-  # @return [Hash] A tree-ish representation of the parsed query
-  # @raise [OQL::ParsingFailed] if the query provided was invalid
-  def self.parse(query)
-    begin
-      parse_tree = Parser.new.parse(query)
-    rescue Parslet::ParseFailed => e
-      raise ParsingFailed, e.message
-    end
-
-    intermediate_tree = ValueListTransform.new.apply(parse_tree)
-    TreeTransform.new.apply(intermediate_tree)
-  end
+  rule(valueList: subtree(:x)) { x }
 end

@@ -59,6 +59,40 @@ describe 'OQL' do
     expect(OQL.parse(query)).to eql expected
   end
 
+  it 'returns a valid tree for a query with a single multi-value'do
+    query = 'status == { "1" }'
+    expected = {
+      filters: [
+        {
+          condition: {
+            field: 'status',
+            operator: :is_equal,
+            values: [ "1" ]
+          }
+        }
+      ]
+    }
+
+    expect(OQL.parse(query)).to eql expected
+  end
+
+  it 'returns a valid tree for a query without value'do
+    query = 'status == { }'
+    expected = {
+      filters: [
+        {
+          condition: {
+            field: 'status',
+            operator: :is_equal,
+            values: [ ]
+          }
+        }
+      ]
+    }
+
+    expect(OQL.parse(query)).to eql expected
+  end
+
   it 'throws a ParsingFailed error on invalid input' do
     query = 'this is not a query!'
 

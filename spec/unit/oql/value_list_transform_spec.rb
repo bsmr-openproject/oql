@@ -15,30 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'oql/parser'
-require 'oql/parsing_failed'
-require 'oql/tree_transform'
 require 'oql/value_list_transform'
-require 'oql/version'
+require 'parslet/rig/rspec'
 
-require 'parslet'
+describe 'TreeTransform' do
+  let(:transform) { ValueListTransform.new }
 
-class OQL
-
-  # Parses the given query string and returns a tree-ish representation of
-  # the given query.
-  #
-  # @param query [String] The query string to be parsed
-  # @return [Hash] A tree-ish representation of the parsed query
-  # @raise [OQL::ParsingFailed] if the query provided was invalid
-  def self.parse(query)
-    begin
-      parse_tree = Parser.new.parse(query)
-    rescue Parslet::ParseFailed => e
-      raise ParsingFailed, e.message
+  describe 'valueList rules' do
+    it 'transforms empty lists' do
+      tree = { valueList: '{ }' }
+      expect(transform.apply(tree)).to eql []
     end
 
-    intermediate_tree = ValueListTransform.new.apply(parse_tree)
-    TreeTransform.new.apply(intermediate_tree)
+    it 'transforms non-empty lists' do
+      tree = { valueList: { valueString: 'foobar!' } }
+      expected = { valueString: 'foobar!' }
+      expect(transform.apply(tree)).to eql expected
+    end
   end
 end

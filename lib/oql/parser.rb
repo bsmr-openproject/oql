@@ -35,10 +35,10 @@ class Parser < Parslet::Parser
 
   rule(:valueList)  {
                       spaced(
-                        str('{') >>
-                        value >> (str(',') >> value).repeat >>
+                        str('{') >> space? >>
+                        (value >> (str(',') >> value).repeat).maybe >>
                         str('}')
-                      )
+                      ).as(:valueList)
                     }
 
   rule(:andOp)      { spaced(str('&&')) }

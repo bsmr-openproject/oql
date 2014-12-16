@@ -22,6 +22,10 @@ describe 'Parser' do
   describe 'valuelist rule' do
     let(:rule) { Parser.new.valueList }
 
+    it 'can contain no values' do
+      expect(rule).to parse('{ }')
+    end
+
     it 'can contain a single value' do
       expect(rule).to parse('{ "1" }')
     end
@@ -38,9 +42,25 @@ describe 'Parser' do
       expect(rule).to parse('   {   "1"   ,   "2"   ,   "3"   }   ')
     end
 
+    it 'can parse empty list with missing whitespace' do
+      expect(rule).to parse('{}')
+    end
+
+    it 'can parse empty list with missing whitespace' do
+      expect(rule).to parse('   {      }   ')
+    end
+
     it 'returns one element per value' do
       tree = rule.parse('{ "1", "2", "3" }')
-      expect(tree.size).to eql 3
+      expect(tree[:valueList].size).to eql 3
+    end
+
+    it 'can not parse extra comma in front of value' do
+      expect(rule).to_not parse('{,"1"}')
+    end
+
+    it 'can not parse extra comma after value' do
+      expect(rule).to_not parse('{"1",}')
     end
   end
 end
