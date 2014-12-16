@@ -66,6 +66,9 @@ The **value** can either be a single value (enclosed in quotation marks) or mult
 In the case of multiple values you can read the filter as **OR** statement, e.g. "If status either equals value A *or* value B" and
 "If the subject either contains foo *or* if it contains bar".
 
+Note that in case of an empty list of values (e.g. `status == { }`, there is nothing to compare against and therefore
+such a condition will always evaluate to false.
+
 In the case of referenced properties - like the status - you can either specify the Link-URL as provided by the **APIv3** as a value
 or the **ID** of the referenced ressource.
 
