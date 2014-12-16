@@ -59,15 +59,15 @@ The general structure of a OQL query can be described as
 field operator value
 ````
 
-Where **field** is the name of any property of your ressource, you can consult the [API v3 Specification](https://github.com/opf/openproject/blob/dev/doc/apiv3-documentation.apib)
-for the properties available on each ressource.
+Where **field** is the name of any property of your resource, you can consult the [API v3 Specification](https://github.com/opf/openproject/blob/dev/doc/apiv3-documentation.apib)
+for the properties available on each resource.
 
 The **value** can either be a single value (enclosed in quotation marks) or multiple values, like `{ "value A", "value B" }`.
 In the case of multiple values you can read the filter as **OR** statement, e.g. "If status either equals value A *or* value B" and
 "If the subject either contains foo *or* if it contains bar".
 
 In the case of referenced properties - like the status - you can either specify the Link-URL as provided by the **APIv3** as a value
-or the **ID** of the referenced ressource.
+or the **ID** of the referenced resource.
 
 Operators
 =========
