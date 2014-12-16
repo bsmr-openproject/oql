@@ -116,7 +116,7 @@ binaryOperator =  optionalSpace, "==", optionalSpace
 
 valueExpr = singleValue | multipleValues ;
 
-multipleValues = optionalSpace, "{", singleValue,  { "," singleValue }, "}", optionalSpace ;
+multipleValues = optionalSpace, "{", (singleValue, { "," singleValue } | optionalSpace), "}", optionalSpace ;
 
 singleValue = optionalSpace, '"', {([:print:] - '"' - '\' | '\"' | '\\')}, '"', optionalSpace ;
 
