@@ -67,7 +67,7 @@ describe 'OQL' do
           condition: {
             field: 'status',
             operator: :is_equal,
-            values: [ "1" ]
+            values: ['1']
           }
         }
       ]
@@ -84,7 +84,7 @@ describe 'OQL' do
           condition: {
             field: 'status',
             operator: :is_equal,
-            values: [ ]
+            values: []
           }
         }
       ]
